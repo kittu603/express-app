@@ -14,10 +14,10 @@ use is a method in Express that allows you to basically add specific middleware 
 So let's say for example you want to have on a specific path a specific piece of code just before or after,
  you can actually do that with middleware.
 */
-app.use('/',express.static('public'))
+app.use('/', express.static('public'))    //http://localhost:3000/sample.jpg will search for public dir here
 
 // lll'y path after /images telling to look for static in images dir
-app.use('/images', express.static('images'))
+app.use('/images', express.static('images'))     //http://localhost:3000/images/dance.jpg will search for images dir here
 
 //get request if /data is trigerred, 'get' is getting data
 
@@ -25,11 +25,39 @@ app.use('/images', express.static('images'))
 
 app.get('/data', (req,res) => 
     
-    res.json(data)
+    res.send(data)
+
   )
+
+  
+//home page
+app.get('/',(req,res) =>
+    res.send("Welcome to main page  Available routes :- http://localhost:3000/data http://localhost:3000/data/<num> "),
+
+)
 
 // post request, 'Post' is actually sending data to the server.
 
+// route to get each specific item from data
+// gives data of each specific id which ever requested as data/2 (eg)
+
+app.get('/data/:id', (req,res,next) =>{
+    let user = Number(req.params.id);   // converting the requested id to integer
+    res.send(data[user]);       //getting that instance of user from data JSON obj
+    next();                    // next fucn allows to call the next function automatically to run
+
+},  (req,res) => {
+        console.log(`data  was sent!`)
+}
+    
+)
+
+//redirect method which redirects to another site
+// various method @ http://expressjs.com/en/5x/api.html#res.redirect
+
+app.get('/favsite', (req,res) =>{
+    res.redirect('https://www.google.com/')
+})
 
 /*
 f we had for example a database connected to our server, then we could do a whole bunch of commands here. 
